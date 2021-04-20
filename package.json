@@ -1,0 +1,68 @@
+{
+  "name": "create-instant-game",
+  "author": "Kun Chen",
+  "version": "0.1.0",
+  "license": "MIT",
+  "bin": {
+    "create-instant-game": "./bin.js"
+  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "printWidth": 120,
+    "tabWidth": 2,
+    "importOrder": [
+      "^\\."
+    ],
+    "importOrderSeparation": true
+  },
+  "module": "dist/create-instant-game.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/create-instant-game.cjs.production.min.js",
+      "limit": "512 KB"
+    },
+    {
+      "path": "dist/create-instant-game.esm.js",
+      "limit": "512 KB"
+    }
+  ],
+  "peerDependencies": {},
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.10.2",
+    "@trivago/prettier-plugin-sort-imports": "^2.0.2",
+    "husky": "^6.0.0",
+    "size-limit": "^4.10.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^7.2.0"
+  }
+}
