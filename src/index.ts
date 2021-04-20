@@ -1,3 +1,3 @@
-import run from './cli';
+import runAsync from './cli';
 
-export { run };
+export { runAsync };
