@@ -55,7 +55,12 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.10.2",
     "@trivago/prettier-plugin-sort-imports": "^2.0.2",
+    "@types/fs-extra": "^9.0.11",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "husky": "^6.0.0",
+    "prettier": "^2.2.1",
+    "shx": "^0.3.3",
     "size-limit": "^4.10.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
@@ -63,6 +68,8 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "commander": "^7.2.0"
+    "commander": "^7.2.0",
+    "fs-extra": "^9.1.0",
+    "moment": "^2.29.1"
   }
 }
