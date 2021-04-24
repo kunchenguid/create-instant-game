@@ -1,28 +1,35 @@
 import chalk from 'chalk';
-import { spawn, execSync } from 'child_process';
+import { spawn } from 'child_process';
 import { program } from 'commander';
 import fs from 'fs-extra';
 import moment from 'moment';
 import path from 'path';
 
-function createReactAppAsync(projectName: string): Promise<void> {
+function executeCommandAsync(
+  command: string,
+  params: string[],
+  cwd: string
+): Promise<void> {
   return new Promise((resolve, reject) => {
-    console.log(chalk.blue('Running create-react-app...'));
-
-    const npx = spawn(process.platform === 'win32' ? 'npx.cmd' : 'npx', [
-      'create-react-app',
-      projectName,
-      '--template',
-      'typescript',
-    ]);
-    npx.on('error', error => {
-      console.log(chalk.red(error.message));
+    const cmd = spawn(command, params, {
+      cwd,
+    });
+    cmd.on('error', (error) => {
       reject(error);
     });
-    npx.on('close', () => {
+    cmd.on('close', () => {
       resolve();
     });
   });
+}
+
+async function createReactAppAsync(projectName: string): Promise<void> {
+  console.log(chalk.blue('Running create-react-app...'));
+  await executeCommandAsync(
+    process.platform === 'win32' ? 'npx.cmd' : 'npx',
+    ['create-react-app', projectName, '--template', 'typescript'],
+    process.cwd()
+  );
 }
 
 async function copyTemplateFilesAsync(
@@ -35,10 +42,11 @@ async function copyTemplateFilesAsync(
   const templateDir = path.join(__dirname, '..', 'template');
 
   await fs.remove(path.join(projectDir, 'public'));
+  await fs.remove(path.join(projectDir, 'src'));
   await fs.copy(templateDir, projectDir);
 
   const publicFiles = await fs.readdir(path.join(projectDir, 'public'));
-  publicFiles.forEach(file => {
+  publicFiles.forEach((file) => {
     const fullFilePath = path.join(projectDir, 'public', file);
     const fileContent = fs.readFileSync(fullFilePath).toString('utf-8');
     const newContent = fileContent
@@ -55,21 +63,56 @@ async function installDepsAsync(projectName: string): Promise<void> {
   console.log(chalk.blue('Installing dependencies...'));
 
   const devDependencies = [
-    'shx',
     '@trivago/prettier-plugin-sort-imports',
+    '@typescript-eslint/eslint-plugin',
+    'eslint-config-react-app',
     'eslint-config-prettier',
     'eslint-plugin-prettier',
     'prettier',
+    'shx',
+    'cross-env',
   ];
-
-  devDependencies.forEach(dep => {
-    execSync(
-      `${process.platform === 'win32' ? 'yarn.cmd' : 'yarn'} add ${dep} -D`,
-      {
-        cwd: path.join(process.cwd(), projectName),
-      }
+  for (const dep of devDependencies) {
+    await executeCommandAsync(
+      process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
+      ['add', dep, '-D'],
+      path.join(process.cwd(), projectName)
     );
-  });
+  }
+
+  const dependencies = ['phaser'];
+  for (const dep of dependencies) {
+    await executeCommandAsync(
+      process.platform === 'win32' ? 'yarn.cmd' : 'yarn',
+      ['add', dep],
+      path.join(process.cwd(), projectName)
+    );
+  }
+}
+
+async function overridePackageJsonAsync(projectName: string): Promise<void> {
+  console.log(chalk.blue('Updating package.json...'));
+
+  const content = await fs.readFile(
+    path.join(process.cwd(), projectName, 'package.json')
+  );
+  const overrideContent = await fs.readFile(
+    path.join(process.cwd(), projectName, 'package.override.json')
+  );
+
+  const json = JSON.parse(content.toString('utf-8'));
+  const overrideJson = JSON.parse(overrideContent.toString('utf-8'));
+
+  const newJson = {
+    ...json,
+    ...overrideJson,
+  };
+  await fs.writeFile(
+    path.join(process.cwd(), projectName, 'package.json'),
+    JSON.stringify(newJson, null, 2)
+  );
+
+  await fs.rm(path.join(process.cwd(), projectName, 'package.override.json'));
 }
 
 async function actionAsync(
@@ -79,6 +122,7 @@ async function actionAsync(
   await createReactAppAsync(projectName);
   await copyTemplateFilesAsync(projectName, options);
   await installDepsAsync(projectName);
+  await overridePackageJsonAsync(projectName);
 }
 
 export default async function runAsync() {
