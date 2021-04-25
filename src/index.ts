@@ -1,3 +1,5 @@
-import runAsync from './cli';
+import cliAsync from './cli';
+import { activePlatform } from './library/platform/autoDetect';
+import { startEstimatedProgressReporter } from './library/utils/startEstimatedProgressReporter';
 
-export { runAsync };
+export { cliAsync, activePlatform, startEstimatedProgressReporter };

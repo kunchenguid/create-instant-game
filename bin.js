@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 const lib = require('./dist/index.js');
 
-lib.runAsync();
+lib.cliAsync();

@@ -22,7 +22,14 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "publish:no-bump": "git checkout publish-to-npm && git pull && git merge --no-edit --no-ff master && git push && git checkout master",
+    "publish:patch": "git checkout master && bump patch -t \"v%s\" -p && yarn publish:no-bump",
+    "publish:minor": "git checkout master && bump minor -t \"v%s\" -p && yarn publish:no-bump",
+    "publish:major": "git checkout master && bump major -t \"v%s\" -p && yarn publish:no-bump",
+    "pre:patch": "bump prepatch -t \"v%s-beta\" -p && cross-env npm_config_registry=https://registry.npmjs.org/ npm publish --tag beta",
+    "pre:minor": "bump preminor -t \"v%s-beta\" -p && cross-env npm_config_registry=https://registry.npmjs.org/ npm publish --tag beta",
+    "pre:major": "bump premajor -t \"v%s-beta\" -p && cross-env npm_config_registry=https://registry.npmjs.org/ npm publish --tag beta"
   },
   "husky": {
     "hooks": {
@@ -64,7 +71,8 @@
     "size-limit": "^4.10.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "version-bump-prompt": "^6.1.0"
   },
   "dependencies": {
     "chalk": "^4.1.0",

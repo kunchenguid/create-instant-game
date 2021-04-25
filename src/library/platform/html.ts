@@ -1,4 +1,4 @@
-import { GameConfig, GameConfigKey } from '../services/config';
+import { SessionConfig, SessionConfigKey } from '../services/sessionConfig';
 import {
   FriendInfo,
   LocalizableContent,
@@ -20,15 +20,15 @@ export class HtmlPlatform extends PlatformBase {
     this.setupCrashReporter();
     await this.getConfigAsync();
 
-    const resetPlayerData = GameConfig.instance.getBooleanConfig(
-      GameConfigKey.reset_player_data
+    const resetPlayerData = SessionConfig.instance.getBooleanConfig(
+      SessionConfigKey.reset_player_data
     );
     if (resetPlayerData) {
       window.localStorage.clear();
     }
 
-    this.contextId = GameConfig.instance.getBooleanConfig(
-      GameConfigKey.in_context
+    this.contextId = SessionConfig.instance.getBooleanConfig(
+      SessionConfigKey.in_context
     )
       ? 'HTML_PLATFORM_FAKE_CONTEXT_ID'
       : null;
@@ -104,13 +104,13 @@ export class HtmlPlatform extends PlatformBase {
   }
 
   public postUpdate(
-    templateId: string,
+    _templateId: string,
     text: string | LocalizableContent,
     image: string,
-    cta: string | null,
-    data: object | null,
-    push: boolean,
-    immediate: boolean
+    _cta: string | null,
+    _data: object | null,
+    _push: boolean,
+    _immediate: boolean
   ) {
     // tslint:disable-next-line:no-console
     console.log('Posting Custom Update: ');
@@ -143,7 +143,7 @@ export class HtmlPlatform extends PlatformBase {
   public shareAsync(
     text: string,
     image: string,
-    data: object | null
+    _data: object | null
   ): Promise<void> {
     // tslint:disable-next-line:no-console
     console.log(`shareAsync: ${text}`);
@@ -198,7 +198,7 @@ export class HtmlPlatform extends PlatformBase {
     window.alert(`switching to ${gameId}`);
   }
 
-  public chooseContextAsync(newContextOnly: boolean): Promise<string | null> {
+  public chooseContextAsync(_newContextOnly: boolean): Promise<string | null> {
     if (window.confirm('switch into context?')) {
       this.contextId = 'HTML_PLATFORM_FAKE_CONTEXT_ID';
       // tslint:disable-next-line:no-console
@@ -218,7 +218,7 @@ export class HtmlPlatform extends PlatformBase {
     return Promise.reject(new Error('rejected'));
   }
 
-  public createContextAsync(playerId: string[]): Promise<string | null> {
+  public createContextAsync(_playerId: string[]): Promise<string | null> {
     if (window.confirm('switch into context?')) {
       this.contextId = 'HTML_PLATFORM_FAKE_CONTEXT_ID';
       // tslint:disable-next-line:no-console
@@ -304,8 +304,8 @@ ${error ? error.stack : 'not available'}
       optionsDiv.id = 'cig-options';
       document.body.appendChild(optionsDiv);
 
-      for (const key of GameConfig.instance.keys) {
-        const configKey = GameConfigKey[key];
+      for (const key of SessionConfig.instance.keys) {
+        const configKey = SessionConfigKey[key];
         const rowDiv = document.createElement('div');
         rowDiv.className = 'row';
         optionsDiv.appendChild(rowDiv);
@@ -318,7 +318,7 @@ ${error ? error.stack : 'not available'}
         const checkbox = document.createElement('input');
         checkbox.id = `checkbox_${key}`;
         checkbox.type = 'checkbox';
-        checkbox.checked = GameConfig.instance.getBooleanConfig(key);
+        checkbox.checked = SessionConfig.instance.getBooleanConfig(key);
         rowDiv.appendChild(checkbox);
       }
 
@@ -332,11 +332,11 @@ ${error ? error.stack : 'not available'}
       buttonRowDiv.appendChild(buttonStartGame);
 
       buttonStartGame.onclick = () => {
-        for (const key of GameConfig.instance.keys) {
+        for (const key of SessionConfig.instance.keys) {
           const checkbox = document.getElementById(
             `checkbox_${key}`
           ) as HTMLInputElement;
-          GameConfig.instance.setConfig(key, checkbox.checked ? 1 : 0);
+          SessionConfig.instance.setConfig(key, checkbox.checked ? 1 : 0);
         }
         optionsDiv.remove();
         resolve();

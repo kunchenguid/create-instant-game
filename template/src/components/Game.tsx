@@ -35,6 +35,10 @@ export default function Game() {
         resize();
       });
     });
+
+    return () => {
+      engine.destroy(true);
+    };
   }, []);
 
   return null;

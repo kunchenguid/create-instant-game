@@ -1,4 +1,4 @@
-import { GameConfig, GameConfigKey } from '../services/config';
+import { SessionConfig, SessionConfigKey } from '../services/sessionConfig';
 import {
   PlatformBase,
   TargetPlatform,
@@ -33,8 +33,8 @@ export class FBInstantPlatform extends PlatformBase {
       'FBInstant'
     ] as any;
 
-    GameConfig.instance.setConfig(GameConfigKey.localhost, 0);
-    GameConfig.instance.setConfig(GameConfigKey.reset_player_data, 0);
+    SessionConfig.instance.setConfig(SessionConfigKey.localhost, 0);
+    SessionConfig.instance.setConfig(SessionConfigKey.reset_player_data, 0);
   }
 
   async initializeAsync(): Promise<void> {
@@ -249,7 +249,7 @@ export class FBInstantPlatform extends PlatformBase {
     return this.FBInstant.switchGameAsync(gameId);
   }
 
-  setUserProperty(kvps: object) {
+  setUserProperty(_kvps: object) {
     // no-op
   }
 
@@ -341,7 +341,7 @@ export class FBInstantPlatform extends PlatformBase {
   private setupErrorReporting() {
     const reportedMessages = new Set<string>();
 
-    window.onerror = (msg: any, url, lineNo, columnNo, error) => {
+    window.onerror = (msg: any, _url, _lineNo, _columnNo, _error) => {
       const message = msg instanceof Event ? JSON.stringify(msg) : msg;
       if (!reportedMessages.has(message)) {
         this.logEvent(

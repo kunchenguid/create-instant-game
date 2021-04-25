@@ -1,6 +1,5 @@
+import { activePlatform } from 'create-instant-game';
 import Phaser from 'phaser';
-
-import { currentPlatform } from '../platform/autoDetect';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -8,7 +7,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   public create() {
-    currentPlatform.startGameAsync().then(() => {
+    activePlatform.startGameAsync().then(() => {
       this.scene.start('Main');
     });
   }

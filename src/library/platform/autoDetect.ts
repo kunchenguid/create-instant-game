@@ -12,4 +12,4 @@ export const autoDetectPlatform = () => {
   }
 };
 
-export const currentPlatform: PlatformBase = autoDetectPlatform();
+export const activePlatform: PlatformBase = autoDetectPlatform();
