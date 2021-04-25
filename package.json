@@ -1,7 +1,7 @@
 {
   "name": "create-instant-game",
   "author": "Kun Chen",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "MIT",
   "bin": {
     "create-instant-game": "./bin.js"

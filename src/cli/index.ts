@@ -80,7 +80,7 @@ async function installDepsAsync(projectName: string): Promise<void> {
     );
   }
 
-  const dependencies = ['phaser', 'create-instant-game'];
+  const dependencies = ['phaser', 'instant-game-utils'];
   for (const dep of dependencies) {
     await executeCommandAsync(
       process.platform === 'win32' ? 'yarn.cmd' : 'yarn',

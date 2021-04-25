@@ -1,7 +1,7 @@
 import {
   activePlatform,
   startEstimatedProgressReporter,
-} from 'create-instant-game';
+} from 'instant-game-utils';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
