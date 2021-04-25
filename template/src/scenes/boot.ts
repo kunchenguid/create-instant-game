@@ -1,4 +1,4 @@
-import { activePlatform } from 'create-instant-game';
+import { activePlatform } from 'instant-game-utils';
 import Phaser from 'phaser';
 
 export class BootScene extends Phaser.Scene {
